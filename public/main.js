@@ -3,10 +3,6 @@ const socket = io();
 const chatForm = document.getElementById("form");
 const chatMessages = document.querySelector(".interaction");
 
-socket.on("onConnection", message => {
-  console.log(message);
-})
-
 //Output message to DOM
 const outputMessage = (msg, sender) => {
   const p = document.createElement("p");
@@ -19,9 +15,13 @@ const outputMessage = (msg, sender) => {
 }
 
 //Receives Messages from server
+
 socket.on("message", message => {
-  outputMessage(message, "me")
+  message.forEach((singleMsg, index) => {
+    outputMessage(singleMsg, "me")
+  })
 })
+
 
 socket.emit("disconnected", "session ended")
 
@@ -38,5 +38,5 @@ chatForm.addEventListener("submit", e => {
 
   //clear input 
   e.target.elements.msg.value = "";
-  e.target.elements.msg.focus()
+  e.target.elements.msg.focus();
 })
