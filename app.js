@@ -14,12 +14,13 @@ const {cart, checkout, curOrder, cartUpdate} = require("./utils/cartDetails")
 const PORT = process.env.PORT || 7000
 
 
-//setting express session middleware
+//setting cookie-session middleware
 const sessionMiddleware = session({
   secret: "secret",
   resave: false,
   saveUninitialized: false,
   maxAge: 1000 * 60 * 15,
+  sameSite: 'strict',
   cookie:{
     secure: true
        }
