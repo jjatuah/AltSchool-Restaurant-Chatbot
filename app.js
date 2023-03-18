@@ -44,7 +44,7 @@ io.on("connection", socket => {
 
   //Receive chat Messages from the client 
   socket.on("chatMessage", message => {
-    const spacesRemoved = message.replaceAll(' ', '');
+    const spacesRemoved = message.trim();
     if (spacesRemoved === "1") {
       socket.emit("message", menu)
     }else if(spacesRemoved === "2") {
