@@ -7,6 +7,7 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+const session = require("express-session");
 
 const PORT = process.env.PORT || 7000
 
@@ -25,6 +26,13 @@ const meatPierOrder = ["MeatPie added to cart", "Select 90 to return to the main
 const pizzaOrder = ["Pizza added to cart", "Select 90 to return to the main menu", "Select 99 to checkout order"]
 
 const friesOrder = ["Fries added to cart", "Select 90 to return to the main menu", "Select 99 to checkout order"]
+
+//setting express session middleware
+const sessionMiddleware = session({
+  secret: "changehhhit",
+  resave: false,
+  saveUninitialized: false
+});
 
 //Setting static folder
 app.use(express.static(path.join(__dirname, "public")));
@@ -58,14 +66,19 @@ let cart =
     },
   }
 
-let checkout = ["Cart Summary","0 Burger ordered || cost 0","0 Shawarma ordered || cost 0","0 Meat Pie ordered || cost 0","0 Pizza ordered || cost 0","0 Fries ordered || cost 0"]; 
+let checkout = ["Order History","0 Burger ordered || cost 0","0 Shawarma ordered || cost 0","0 Meat Pie ordered || cost 0","0 Pizza ordered || cost 0","0 Fries ordered || cost 0"]; 
 
 let curOrder = ["Current Order", "No Order Available"];
+let placedOrder = ["Order placed Successfully", "Select 90 to return to the main menu"];
 
 const cartUpdate = (quantity, cost, product) => {
   let checkoutUpdate = `${quantity} ${product} ordered || cost ${cost} `
   return checkoutUpdate;
 }
+
+
+
+io.engine.use(sessionMiddleware)
 
 //When client connects
 io.on("connection", socket => {
@@ -117,17 +130,24 @@ io.on("connection", socket => {
       cart.fries.cost += cart.fries.price
       checkout[5] = cartUpdate(cart.fries.quantity, cart.fries.cost, "Fries")
       curOrder[1] = cartUpdate(1, 50, "Fries")
-    }else if(spacesRemoved === "99") {
+    }else if(spacesRemoved === "98") {
       socket.emit("message", checkout)
     }else if(spacesRemoved === "97") {
       socket.emit("message", curOrder)
+    }else if(spacesRemoved === "90") {
+      socket.emit("message", initial)
     }
     else if(spacesRemoved === "0") {
-      curOrder[1] = "No Order Available"
-      socket.emit("message", curOrder)
+      if(curOrder[1] === "No Order Available") { 
+        socket.emit("message", ["You're yet to make an order"])
+      } else {
+        curOrder[1] = "Order Cancelled"
+        socket.emit("message", curOrder)
+      }
     } else {
       socket.emit("message", invalidSelection)
     }
+    
   })
 })
 
