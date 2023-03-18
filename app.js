@@ -28,7 +28,7 @@ io.on("connection", socket => {
 
   //Receive chat Messages from the client 
   socket.on("chatMessage", message => {
-    console.log(message);
+    socket.emit("message", message);
   })
 })
 

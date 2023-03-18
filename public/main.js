@@ -1,9 +1,26 @@
 const socket = io();
 
-const chatForm = document.getElementById("form")
+const chatForm = document.getElementById("form");
+const chatMessages = document.querySelector(".interaction");
 
 socket.on("onConnection", message => {
   console.log(message);
+})
+
+//Output message to DOM
+const outputMessage = (msg, sender) => {
+  const p = document.createElement("p");
+  p.classList.add(`${sender}`);
+  p.innerHTML = `<span>${msg}</span>`
+  document.querySelector(".interaction").appendChild(p);
+
+  //scroll down after message 
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+//Receives Messages from server
+socket.on("message", message => {
+  outputMessage(message, "me")
 })
 
 socket.emit("disconnected", "session ended")
@@ -17,4 +34,9 @@ chatForm.addEventListener("submit", e => {
 
   //Send Message to server
   socket.emit("chatMessage", msg);
+  outputMessage(msg, "you");
+
+  //clear input 
+  e.target.elements.msg.value = "";
+  e.target.elements.msg.focus()
 })
