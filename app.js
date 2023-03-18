@@ -7,7 +7,7 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-const session = require("express-session");
+var session = require('cookie-session');
 const {initial, menu, invalidSelection, burgerOrder, shawarmaOrder, meatPierOrder, pizzaOrder, friesOrder} = require("./utils/instructions");
 const {cart, checkout, curOrder, cartUpdate} = require("./utils/cartDetails")
 
@@ -16,9 +16,13 @@ const PORT = process.env.PORT || 7000
 
 //setting express session middleware
 const sessionMiddleware = session({
-  secret: "changehhhit",
+  secret: "secret",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  maxAge: 1000 * 60 * 15,
+  cookie:{
+    secure: true
+       }
 });
 
 io.engine.use(sessionMiddleware)
