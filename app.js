@@ -11,21 +11,21 @@ const session = require("express-session");
 
 const PORT = process.env.PORT || 7000
 
-const initial =["Select 1 to Place an order", "Select 99 to checkout order", "Select 98 to see order history", "Select 97 to see current order", "Select 0 to cancel order"]
+const initial =["Select 1 to Place an order", "Select 98 to see order history", "Select 97 to see current order", "Select 0 to cancel order"]
 
-const menu = ["Select 2 to order a burger", "Select 3 to order Shawarma", "Select 4 to order Meat Pie", "Select 5 to order Pizza", "Select 6 to order our special fries"]
+const menu = ["Select 2 to order a burger at $20", "Select 3 to order Shawarma at $40", "Select 4 to order Meat Pie at $10", "Select 5 to order Pizza at $100", "Select 6 to order our special fries $50"]
 
 const invalidSelection = ["Invalid Selection"]
 
-const burgerOrder = ["Burger added to cart", "Select 90 to return to the main menu", "Select 99 to checkout order"]
+const burgerOrder = ["Burger orderd successfully", "Select 90 to return to the main menu", "Select 0 to cancel order",  "Select 98 to see order history", "Select 97 to see current order"]
 
-const shawarmaOrder = ["Shawarma added to cart", "Select 90 to return to the main menu", "Select 99 to checkout order"]
+const shawarmaOrder = ["Shawarma orderd successfully", "Select 90 to return to the main menu", "Select 0 to cancel order",  "Select 98 to see order history", "Select 97 to see current order"]
 
-const meatPierOrder = ["MeatPie added to cart", "Select 90 to return to the main menu", "Select 99 to checkout order"]
+const meatPierOrder = ["MeatPie orderd successfully", "Select 90 to return to the main menu", "Select 0 to cancel order",  "Select 98 to see order history", "Select 97 to see current order"]
 
-const pizzaOrder = ["Pizza added to cart", "Select 90 to return to the main menu", "Select 99 to checkout order"]
+const pizzaOrder = ["Pizza orderd successfully", "Select 90 to return to the main menu", "Select 0 to cancel order",  "Select 98 to see order history", "Select 97 to see current order"]
 
-const friesOrder = ["Fries added to cart", "Select 90 to return to the main menu", "Select 99 to checkout order"]
+const friesOrder = ["Fries orderd successfully", "Select 90 to return to the main menu", "Select 0 to cancel order",  "Select 98 to see order history", "Select 97 to see current order"]
 
 //setting express session middleware
 const sessionMiddleware = session({
@@ -69,10 +69,9 @@ let cart =
 let checkout = ["Order History","0 Burger ordered || cost 0","0 Shawarma ordered || cost 0","0 Meat Pie ordered || cost 0","0 Pizza ordered || cost 0","0 Fries ordered || cost 0"]; 
 
 let curOrder = ["Current Order", "No Order Available"];
-let placedOrder = ["Order placed Successfully", "Select 90 to return to the main menu"];
 
 const cartUpdate = (quantity, cost, product) => {
-  let checkoutUpdate = `${quantity} ${product} ordered || cost ${cost} `
+  let checkoutUpdate = `${quantity} ${product} ordered || cost $${cost} `
   return checkoutUpdate;
 }
 
